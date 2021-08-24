@@ -1,0 +1,10 @@
+---
+- name: restart crowdsec
+  systemd:
+    name: crowdsec
+    state: restarted
+
+- name: restart crowdsec-firewall-bouncer
+  systemd:
+    name: crowdsec-firewall-bouncer
+    state: restarted

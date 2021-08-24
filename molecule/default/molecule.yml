@@ -1,0 +1,14 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: hetznercloud
+platforms:
+  - name: ${REPO_NAME}-${MOLECULE_IMAGE}-${REF}
+    server_type: cx11
+    image: ${MOLECULE_IMAGE}
+    custom_ssh_key_name: molecule.admin
+provisioner:
+  name: ansible
+verifier:
+  name: testinfra

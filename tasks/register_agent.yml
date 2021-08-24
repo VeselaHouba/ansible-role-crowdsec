@@ -1,0 +1,18 @@
+---
+- name: Check if agent is already registered
+  shell: cscli machines list -o raw | grep {{ inventory_hostname }} | grep true || echo "Not found"
+  register: _csmachines
+  delegate_to: "{{ crowdsec_delegate_server_hostname }}"
+  changed_when: false
+
+- block:
+    - name: Register agent to server
+      command: cscli lapi register -u {{ crowdsec_lapi_url }} --machine {{ inventory_hostname }}
+      notify: restart crowdsec
+
+    - name: Validate agent on server
+      command: cscli machines validate {{ inventory_hostname }}
+      delegate_to: "{{ crowdsec_delegate_server_hostname }}"
+  when:
+    - _csmachines.rc == 0
+    - _csmachines.stdout is search("Not found")

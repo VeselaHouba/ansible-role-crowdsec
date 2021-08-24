@@ -1,0 +1,7 @@
+---
+name: crowdsecurity/mywhitelists
+description: "Whitelist events from my ip addresses"
+whitelist:
+  reason: "my ip ranges"
+  ip: {{ crowdsec_whitelist.ip|to_yaml }}
+  cidr: {{ crowdsec_whitelist.cidr|to_yaml }}

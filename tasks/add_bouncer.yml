@@ -1,0 +1,25 @@
+---
+- name: Install bouncer (currently only firewall)
+  apt:
+    name:
+      - crowdsec-firewall-bouncer
+      - crowdsec-firewall-bouncer-iptables
+
+- name: Register new bouncer
+  shell: cscli bouncers add {{ inventory_hostname }} -o raw
+  register: _csbouncer
+  delegate_to: "{{ crowdsec_delegate_server_hostname }}"
+  changed_when: _csbouncer.stderr is not search("already exists")
+
+- name: Deploy bouncer config
+  lineinfile:
+    regex: "{{ item.regex }}"
+    line: "{{ item.line }}"
+    dest: /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml
+  with_items:
+    - regex: "^api_url"
+      line: "api_url: {{ crowdsec_lapi_url }}"
+    - regex: "^api_key"
+      line: "api_key: {{ _csbouncer.stdout }}"
+  when: _csbouncer.changed
+  notify: restart crowdsec-firewall-bouncer
