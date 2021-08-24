@@ -6,7 +6,7 @@
       - crowdsec-firewall-bouncer-iptables
 
 - name: Register new bouncer
-  shell: cscli bouncers add {{ inventory_hostname }} -o raw
+  command: cscli bouncers add {{ inventory_hostname }} -o raw
   register: _csbouncer
   delegate_to: "{{ crowdsec_delegate_server_hostname }}"
   changed_when: _csbouncer.stderr is not search("already exists")

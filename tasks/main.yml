@@ -3,6 +3,7 @@
   apt:
     name:
       - apt-transport-https
+      - gnupg
 
 - name: Add an apt signing key
   apt_key:
@@ -10,7 +11,7 @@
 
 - name: Add apt repo
   apt_repository:
-    repo: deb https://packagecloud.io/crowdsec/crowdsec/{{ ansible_distribution|lower}}/ {{ ansible_distribution_release|lower }} main
+    repo: deb https://packagecloud.io/crowdsec/crowdsec/{{ ansible_distribution|lower }}/ {{ ansible_distribution_release|lower }} main
     update_cache: true
 
 - name: Install package
@@ -22,12 +23,18 @@
   template:
     src: etc/crowdsec/config.yaml.j2
     dest: /etc/crowdsec/config.yaml
+    owner: root
+    group: root
+    mode: 0644
   notify: restart crowdsec
 
 - name: Deploy whitelist
   template:
     src: etc/crowdsec/parsers/s02-enrich/mywhitelist.yaml.j2
     dest: /etc/crowdsec/parsers/s02-enrich/mywhitelist.yaml
+    owner: root
+    group: root
+    mode: 0644
   when: crowdsec_whitelist.enabled
   notify: restart crowdsec
 
