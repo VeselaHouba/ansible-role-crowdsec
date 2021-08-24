@@ -46,7 +46,7 @@
   when:
     - crowdsec_delegate_server_hostname != inventory_hostname
 
-- name: Register bouncers(s)
+- name: Register distributed bouncers(s)
   include_tasks: add_bouncer.yml
   when:
-    - crowdsec_delegate_server_hostname != inventory_hostname
+    - crowdsec_bouncer.enabled

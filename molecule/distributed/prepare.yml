@@ -1,0 +1,34 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Install packages which are usually present
+      apt:
+        update_cache: true
+        name:
+          - locales
+          - tzdata
+          - apt-transport-https
+
+    - name: Create dirs missing in docker image
+      file:
+        path: /run/lock/
+        state: directory
+        mode: 0755
+
+    # - name: Add hosts to /etc/hosts
+    #   lineinfile:
+    #     path: /etc/hosts
+    #     regex: "^{{ hostvars[item].ansible_default_ipv4.address }} {{ item }}"
+    #     line: "{{ hostvars[item].ansible_default_ipv4.address }} {{ item }}"
+    #   with_items: "{{ groups['all'] }}"
+
+    - name: Add master to /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        regex: "^{{ hostvars[item].ansible_default_ipv4.address }} {{ item }}"
+        line: >
+          {{ hostvars[item].ansible_default_ipv4.address }}
+          {{ item }}
+          {{ 'master' if hostvars[item].crowdsec_server.enabled else 'slave' }}
+      with_items: "{{ groups['all'] }}"

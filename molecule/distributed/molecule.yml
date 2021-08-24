@@ -1,0 +1,35 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: hetznercloud
+platforms:
+  - name: ${REPO_NAME}-${MOLECULE_IMAGE}-${REF}-01
+    server_type: cx11
+    image: ${MOLECULE_IMAGE}
+    custom_ssh_key_name: molecule.admin
+  - name: ${REPO_NAME}-${MOLECULE_IMAGE}-${REF}-02
+    server_type: cx11
+    image: ${MOLECULE_IMAGE}
+    custom_ssh_key_name: molecule.admin
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        crowdsec_server:
+          enabled: "{{ true if '${REPO_NAME}-${MOLECULE_IMAGE}-${REF}-01' == inventory_hostname else false }}"
+          listen_uri: 0.0.0.0:8080
+        crowdsec_prometheus:
+          enabled: false
+        crowdsec_lapi_url: http://${REPO_NAME}-${MOLECULE_IMAGE}-${REF}-01:8080/
+        crowdsec_whitelist:
+          enabled: true
+          ip:
+            - "1.1.1.1"
+            - "1.1.1.2"
+          cidr:
+            - "2.2.2.2/24"
+        crowdsec_delegate_server_hostname: ${REPO_NAME}-${MOLECULE_IMAGE}-${REF}-01
+verifier:
+  name: testinfra

@@ -23,3 +23,5 @@
       line: "api_key: {{ _csbouncer.stdout }}"
   when: _csbouncer.changed
   notify: restart crowdsec-firewall-bouncer
+  loop_control:
+    label: "{{ item.regex }}"
