@@ -1,0 +1,5 @@
+---
+kind: template
+load: linter.star
+data:
+  use_hetzner: true
