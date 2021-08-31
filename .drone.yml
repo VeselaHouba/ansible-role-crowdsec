@@ -1,5 +1,5 @@
 ---
 kind: template
-load: veselahouba.linter.star
+load: linter.yaml
 data:
   use_hetzner: true
