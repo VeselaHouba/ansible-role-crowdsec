@@ -1,5 +1,4 @@
----
 kind: template
-load: linter.yaml
+load: linter.star
 data:
   use_hetzner: true
