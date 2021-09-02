@@ -147,6 +147,8 @@ def step_hetzner(os):
           "REPO_NAME=$$(echo $DRONE_REPO_NAME | sed 's/_/-/g')",
           "MOLECULE_IMAGE=%s" % os,
           "export MOLECULE_IMAGE REPO_NAME REF",
+          "curl https://raw.githubusercontent.com/VeselaHouba/molecule/master/molecule-hetznercloud/pull_files.sh > ci/pull_files.sh",
+          "/bin/bash ci/pull_files.sh",
           "molecule test --all"
         ]
       }
