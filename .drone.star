@@ -147,6 +147,7 @@ def step_hetzner(os):
           "REPO_NAME=$$(echo $DRONE_REPO_NAME | sed 's/_/-/g')",
           "MOLECULE_IMAGE=%s" % os,
           "export MOLECULE_IMAGE REPO_NAME REF",
+          "curl "
           "molecule test --all"
         ]
       }
