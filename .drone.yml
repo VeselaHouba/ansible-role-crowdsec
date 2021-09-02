@@ -1,0 +1,4 @@
+kind: template
+load: drone.star
+data:
+  use_hetzner: true
